@@ -13,7 +13,13 @@ import {
   Tooltip,
   Link,
 } from "@mui/material";
-import { useGetRecruitsQuery } from "state/api";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+
+import {
+  useGetPendingRecruitsQuery,
+  useUpdateRejectUserMutation,
+} from "state/api";
+
 import Header from "components/Header";
 import FlexBetween from "components/FlexBetween";
 import WebsiteLinks from "components/WebsiteLinks";
@@ -106,7 +112,7 @@ const Product = ({
   createdAt,
 }) => {
   const [tooltipOpen, setTooltipOpen] = React.useState(false);
-
+  const [rejectUser] = useUpdateRejectUserMutation();
   const theme = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
   let currentTime = Date.now();
@@ -393,12 +399,25 @@ const Product = ({
         <Box padding="5px" backgroundColor={theme.palette.primary[600]}>
           <Typography variant="body1">{charCommentary}</Typography>
         </Box>
-        <Box>
+        <Box display="flex" justifyContent="space-between">
           <Box>
             <Typography variant="body1" color="grey" margin="5px">
               Posted:
               {Math.ceil((currentTime - postedTime) / 1000 / 60 / 60)} hours ago
             </Typography>
+          </Box>
+          <Box>
+            <Button
+              onClick={() => {
+                let rejectedUser = {
+                  id: charID,
+                  charRecruitStatus: "rejected",
+                };
+                rejectUser(rejectedUser);
+              }}
+            >
+              <PersonAddIcon sx={{ fontSize: "3rem", color: "white" }} />
+            </Button>
           </Box>
         </Box>
       </CardContent>
@@ -407,7 +426,7 @@ const Product = ({
 };
 
 const Products = () => {
-  const { data, isLoading } = useGetRecruitsQuery();
+  const { data, isLoading } = useGetPendingRecruitsQuery();
   const isNonMobile = useMediaQuery("(min-width:1000px)");
   console.log(data);
   return (

@@ -12,7 +12,7 @@ import {
   useMediaQuery,
   Tooltip,
 } from "@mui/material";
-import { useGetRecruitsQuery } from "state/api";
+import { useGetPendingRecruitsQuery } from "state/api";
 import Header from "components/Header";
 import FlexBetween from "components/FlexBetween";
 import WebsiteLinks from "components/WebsiteLinks";
@@ -407,7 +407,7 @@ const Product = ({
 };
 
 const Products = () => {
-  const { data, isLoading } = useGetRecruitsQuery();
+  const { data, isLoading } = useGetPendingRecruitsQuery();
   const isNonMobile = useMediaQuery("(min-width:1000px)");
   console.log(data);
   return (

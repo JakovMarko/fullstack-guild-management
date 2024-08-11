@@ -5,7 +5,7 @@ export const api = createApi({
   reducerPath: "adminApi",
   tagTypes: [
     "User",
-    "Recruits",
+    "PendingRecruits",
     "Customers",
     "Transactions",
     "Geography",
@@ -19,9 +19,9 @@ export const api = createApi({
       query: (id) => `general/user/${id}`,
       providesTags: ["User"],
     }),
-    getRecruits: build.query({
-      query: () => "general/recruits",
-      providesTags: ["Recruits"],
+    getPendingRecruits: build.query({
+      query: () => "general/pendingRecruits",
+      providesTags: ["PendingRecruits"],
     }),
     getCustomers: build.query({
       query: () => "client/customers",
@@ -55,11 +55,20 @@ export const api = createApi({
       query: () => "general/dashboard",
       providesTags: ["Dashboard"],
     }),
+    updateRejectUser: build.mutation({
+      query: (userData) => ({
+        url: `general/rejectRecruits`,
+        method: "PUT",
+        body: userData,
+      }),
+      invalidatesTags: ["PendingRecruits"],
+    }),
   }),
 });
 
 export const {
-  useGetRecruitsQuery,
+  useUpdateRejectUserMutation,
+  useGetPendingRecruitsQuery,
   useGetUserQuery,
   useGetCustomersQuery,
   useGetTransactionsQuery,

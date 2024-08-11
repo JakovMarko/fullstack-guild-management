@@ -14,13 +14,31 @@ export const getUser = async (req, res) => {
   }
 };
 
-export const getRecruits = async (req, res) => {
+export const getPendingRecruits = async (req, res) => {
   try {
-    const recruits = await Recruits.find()
+    const recruits = await Recruits.find({ charRecruitStatus: "pending" })
       .sort({ createdAt: -1 })
       .lean()
       .exec();
     res.status(200).json(recruits);
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({ message: error.message });
+  }
+};
+export const putRejectRecruits = async (req, res) => {
+  try {
+    const rejectedRecruit = req.body;
+    const changedToRejected = await Recruits.findOneAndUpdate(
+      { charID: rejectedRecruit.id },
+      {
+        $set: {
+          charRecruitStatus: "rejected",
+        },
+      }
+    );
+
+    res.status(200);
   } catch (error) {
     console.error(error);
     res.status(404).json({ message: error.message });
