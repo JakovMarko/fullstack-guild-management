@@ -1,12 +1,26 @@
 import User from "../models/User.js";
 import OverallStat from "../models/OverallStat.js";
 import Transaction from "../models/Transaction.js";
+import Recruits from "../models/Recruit.js";
 
 export const getUser = async (req, res) => {
   try {
     const { id } = req.params;
     const user = await User.findById(id);
     res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({ message: error.message });
+  }
+};
+
+export const getRecruits = async (req, res) => {
+  try {
+    const recruits = await Recruits.find()
+      .sort({ createdAt: -1 })
+      .lean()
+      .exec();
+    res.status(200).json(recruits);
   } catch (error) {
     console.error(error);
     res.status(404).json({ message: error.message });
