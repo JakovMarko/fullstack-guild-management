@@ -19,6 +19,7 @@ export const getPendingRecruits = async (req, res) => {
     const recruits = await Recruits.find({ charRecruitStatus: "pending" })
       .sort({ createdAt: -1 })
       .lean()
+      .limit(100)
       .exec();
     res.status(200).json(recruits);
   } catch (error) {
@@ -26,6 +27,39 @@ export const getPendingRecruits = async (req, res) => {
     res.status(404).json({ message: error.message });
   }
 };
+
+export const getRejectedRecruits = async (req, res) => {
+  try {
+    const rejectedRecruits = await Recruits.find({
+      charRecruitStatus: "rejected",
+    })
+      .sort({ createdAt: -1 })
+      .lean()
+      .limit(50)
+      .exec();
+    res.status(200).json(rejectedRecruits);
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({ message: error.message });
+  }
+};
+
+export const getContactedRecruits = async (req, res) => {
+  try {
+    const contactedRecruits = await Recruits.find({
+      charRecruitStatus: "contacted",
+    })
+      .sort({ createdAt: -1 })
+      .lean()
+      .limit(100)
+      .exec();
+    res.status(200).json(contactedRecruits);
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({ message: error.message });
+  }
+};
+
 export const putRejectRecruits = async (req, res) => {
   try {
     const rejectedRecruit = req.body;
@@ -34,6 +68,26 @@ export const putRejectRecruits = async (req, res) => {
       {
         $set: {
           charRecruitStatus: "rejected",
+        },
+      }
+    );
+
+    res.status(200);
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({ message: error.message });
+  }
+};
+
+export const putContactRecruits = async (req, res) => {
+  try {
+    console.log("contacted", req.body);
+    const contactedRecruit = req.body;
+    const changedToContacted = await Recruits.findOneAndUpdate(
+      { charID: contactedRecruit.id },
+      {
+        $set: {
+          charRecruitStatus: "contacted",
         },
       }
     );

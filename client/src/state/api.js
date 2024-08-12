@@ -4,52 +4,24 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_BASE_URL }),
   reducerPath: "adminApi",
   tagTypes: [
-    "User",
     "PendingRecruits",
-    "Customers",
-    "Transactions",
-    "Geography",
-    "Sales",
-    "Admins",
-    "Performance",
+    "RejectedRecruits",
+    "ContactedRecruits",
     "Dashboard",
   ],
+
   endpoints: (build) => ({
-    getUser: build.query({
-      query: (id) => `general/user/${id}`,
-      providesTags: ["User"],
-    }),
     getPendingRecruits: build.query({
       query: () => "general/pendingRecruits",
       providesTags: ["PendingRecruits"],
     }),
-    getCustomers: build.query({
-      query: () => "client/customers",
-      providesTags: ["Customers"],
+    getRejectedRecruits: build.query({
+      query: () => "general/rejectedRecruits",
+      providesTags: ["RejectedRecruits"],
     }),
-    getTransactions: build.query({
-      query: ({ page, pageSize, sort, search }) => ({
-        url: "client/transactions",
-        method: "GET",
-        params: { page, pageSize, sort, search },
-      }),
-      providesTags: ["Transactions"],
-    }),
-    getGeography: build.query({
-      query: () => "client/geography",
-      providesTags: ["Geography"],
-    }),
-    getSales: build.query({
-      query: () => "sales/sales",
-      providesTags: ["Sales"],
-    }),
-    getAdmin: build.query({
-      query: () => "management/admins",
-      providesTags: ["Admins"],
-    }),
-    getUserPerformance: build.query({
-      query: (id) => `management/performance/${id}`,
-      providesTags: ["Performance"],
+    getContactedRecruits: build.query({
+      query: () => "general/contactedRecruits",
+      providesTags: ["ContactedRecruits"],
     }),
     getDashboard: build.query({
       query: () => "general/dashboard",
@@ -63,18 +35,22 @@ export const api = createApi({
       }),
       invalidatesTags: ["PendingRecruits"],
     }),
+    updateContactUser: build.mutation({
+      query: (userData) => ({
+        url: `general/contactedRecruits`,
+        method: "PUT",
+        body: userData,
+      }),
+      invalidatesTags: ["PendingRecruits"],
+    }),
   }),
 });
 
 export const {
-  useUpdateRejectUserMutation,
+  useGetContactedRecruitsQuery,
+  useGetRejectedRecruitsQuery,
   useGetPendingRecruitsQuery,
-  useGetUserQuery,
-  useGetCustomersQuery,
-  useGetTransactionsQuery,
-  useGetGeographyQuery,
-  useGetSalesQuery,
-  useGetAdminQuery,
-  useGetUserPerformanceQuery,
   useGetDashboardQuery,
+  useUpdateRejectUserMutation,
+  useUpdateContactUserMutation,
 } = api;

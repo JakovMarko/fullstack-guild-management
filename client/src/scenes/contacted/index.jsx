@@ -14,10 +14,13 @@ import {
   Link,
 } from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-
+import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
+import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import {
-  useGetPendingRecruitsQuery,
+  useGetContactedRecruitsQuery,
   useUpdateRejectUserMutation,
+  useUpdateContactUserMutation,
 } from "state/api";
 
 import Header from "components/Header";
@@ -112,7 +115,10 @@ const Product = ({
   createdAt,
 }) => {
   const [tooltipOpen, setTooltipOpen] = React.useState(false);
+  const [recruitStatus, setRecruitStatus] = useState("pending");
   const [rejectUser] = useUpdateRejectUserMutation();
+  const [contactUser] = useUpdateContactUserMutation();
+
   const theme = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
   let currentTime = Date.now();
@@ -141,7 +147,13 @@ const Product = ({
         backgroundImage: "none",
         backgroundColor: theme.palette.background.alt,
         borderRadius: "0.55rem",
-        border: "1px solid black",
+        boxShadow: `${
+          recruitStatus === "rejected"
+            ? "inset 0px 0px 10px 10px rgba(255,0,0, 0.1)"
+            : recruitStatus === "accepted"
+            ? "inset 0px 0px 10px 10px rgba(0,255,0, 0.1)"
+            : "0px 0px 10px 5px rgba(0,0,0, 0.3)"
+        }`,
       }}
     >
       <CardContent>
@@ -151,12 +163,12 @@ const Product = ({
         >
           <Box display="flex" flexWrap="wrap">
             <Box
-              position="relative"
               component="img"
               sx={{
-                maxHeightheight: 110,
+                maxHeight: "100%",
                 width: 110,
                 border: `2px solid ${theme.palette.primary[600]}`,
+                objectFit: "cover",
               }}
               alt="Character profile picture"
               src={charProfilePicture}
@@ -168,16 +180,24 @@ const Product = ({
               paddingLeft="0.5rem"
             >
               <Typography
-                sx={{ fontSize: 16 }}
+                sx={{
+                  fontSize: 18,
+                  textShadow: "2px 2px 3px rgba(0,0,0, 0.5)",
+                }}
                 color={classColor(charClass)}
-                gutterBottom
               >
                 {charSpec} {charClass}
               </Typography>
-              <Typography sx={{ fontSize: 18 }} gutterBottom>
-                Name: {charName}
+              <Typography
+                sx={{
+                  fontSize: 24,
+                  fontWeight: "bold",
+                  textShadow: "2px 2px 3px rgba(0,0,0, 0.5)",
+                }}
+              >
+                {charName}
               </Typography>
-              <Typography sx={{ fontSize: 15 }} gutterBottom>
+              <Typography sx={{ fontSize: 15 }}>
                 {currentGuild && (
                   <span>
                     Guild :
@@ -190,6 +210,54 @@ const Product = ({
                     >
                       {currentGuild.name}
                     </Link>
+                  </span>
+                )}
+              </Typography>
+              <Typography>
+                {currentGuild && (
+                  <span>
+                    WR:{" "}
+                    <Tooltip
+                      arrow
+                      placement="bottom"
+                      size="ld"
+                      variant="solid"
+                      title={
+                        <span style={{ color: "black", fontSize: 15 }}>
+                          Amidrassil
+                        </span>
+                      }
+                    >
+                      {guildRankings.amidrassil}
+                    </Tooltip>{" "}
+                    |{" "}
+                    <Tooltip
+                      arrow
+                      placement="bottom"
+                      size="ld"
+                      variant="solid"
+                      title={
+                        <span style={{ color: "black", fontSize: 15 }}>
+                          Aberrus
+                        </span>
+                      }
+                    >
+                      {guildRankings.aberrus}
+                    </Tooltip>{" "}
+                    |{" "}
+                    <Tooltip
+                      arrow
+                      placement="bottom"
+                      size="ld"
+                      variant="solid"
+                      title={
+                        <span style={{ color: "black", fontSize: 15 }}>
+                          Vault Incarnates
+                        </span>
+                      }
+                    >
+                      {guildRankings.voti}
+                    </Tooltip>
                   </span>
                 )}
               </Typography>
@@ -393,31 +461,68 @@ const Product = ({
 
           {/* {PREVIOUS RAIDS PROGRESS} */}
           <Box>
-            <h1>Prev Raids</h1>
+            <h1>Prev Raids coming soon...</h1>
           </Box>
         </Box>
         <Box padding="5px" backgroundColor={theme.palette.primary[600]}>
           <Typography variant="body1">{charCommentary}</Typography>
         </Box>
+
+        {/* {CONTAINER FOR POSTED TIME AND LIKE DISLIKE} */}
         <Box display="flex" justifyContent="space-between">
+          {/* {LEFT SIDE} */}
           <Box>
             <Typography variant="body1" color="grey" margin="5px">
               Posted:
               {Math.ceil((currentTime - postedTime) / 1000 / 60 / 60)} hours ago
             </Typography>
           </Box>
-          <Box>
-            <Button
-              onClick={() => {
-                let rejectedUser = {
-                  id: charID,
-                  charRecruitStatus: "rejected",
-                };
-                rejectUser(rejectedUser);
-              }}
-            >
-              <PersonAddIcon sx={{ fontSize: "3rem", color: "white" }} />
-            </Button>
+
+          {/* {RIGHT SIDE} */}
+          {/* SET RECRUITS STATUS TO CONTACTED */}
+          <Box display="flex" flexDirection="row">
+            <Box>
+              <Button
+                onClick={() => {
+                  let contactedUser = {
+                    id: charID,
+                    charRecruitStatus: "contacted",
+                  };
+                  setRecruitStatus("accepted");
+                  contactUser(contactedUser);
+                }}
+              >
+                <PersonAddIcon
+                  sx={{
+                    fontSize: "3rem",
+                    color: "#141937",
+                    boxShadow: "2px 2px 5px 5px rgba(0,0,0, 0.2)",
+                  }}
+                />
+              </Button>
+            </Box>
+
+            {/* SET RECRUITS STATUS TO REJECTED */}
+            <Box>
+              <Button
+                onClick={() => {
+                  let rejectedUser = {
+                    id: charID,
+                    charRecruitStatus: "rejected",
+                  };
+                  setRecruitStatus("rejected");
+                  rejectUser(rejectedUser);
+                }}
+              >
+                <PersonRemoveIcon
+                  sx={{
+                    fontSize: "3rem",
+                    color: "#141937",
+                    boxShadow: "2px 2px 5px 5px rgba(0,0,0, 0.2)",
+                  }}
+                />
+              </Button>
+            </Box>
           </Box>
         </Box>
       </CardContent>
@@ -426,14 +531,13 @@ const Product = ({
 };
 
 const Products = () => {
-  const { data, isLoading } = useGetPendingRecruitsQuery();
+  const { data, isLoading } = useGetContactedRecruitsQuery();
   const isNonMobile = useMediaQuery("(min-width:1000px)");
-  console.log(data);
   return (
     <Box m="1.5rem 2.5rem">
       <Header
-        title="RECRUITS"
-        subtitle="Here you can find the latest recruitment posts from wowprogress and raiderio"
+        title="CONTACTED RECRUITS"
+        subtitle="Here you can find the latest contacted recruits"
       />
       {data || !isLoading ? (
         <Box
