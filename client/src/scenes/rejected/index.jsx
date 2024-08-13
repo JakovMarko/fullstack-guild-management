@@ -470,7 +470,7 @@ const Product = ({
         </Box>
 
         {/* {CONTAINER FOR POSTED TIME AND LIKE DISLIKE} */}
-        <Box display="flex" justifyContent="space-between">
+        <Box display="flex" justifyContent="space-between" alignContent="end">
           {/* {LEFT SIDE} */}
           <Box>
             <Typography variant="body1" color="grey" margin="5px">
@@ -481,8 +481,8 @@ const Product = ({
 
           {/* {RIGHT SIDE} */}
           {/* SET RECRUITS STATUS TO CONTACTED */}
-          <Box display="flex" flexDirection="row">
-            <Box>
+          <Box display="flex" flexDirection="row" alignContent="flex-end">
+            <Box display="flex" alignContent="flex-end">
               <Button
                 onClick={() => {
                   let contactedUser = {
@@ -493,37 +493,28 @@ const Product = ({
                   contactUser(contactedUser);
                 }}
               >
-                <PersonAddIcon
+                <Typography
+                  sx={{
+                    padding: "1px 2px",
+                    fontSize: "1.2rem",
+                    fontWeight: "bold",
+                    color: "#141937",
+                    boxShadow: "2px 2px 5px 5px rgba(0,0,0, 0.2)",
+                  }}
+                >
+                  CONTACT
+                </Typography>
+                {/* <PersonAddIcon
                   sx={{
                     fontSize: "3rem",
                     color: "#141937",
                     boxShadow: "2px 2px 5px 5px rgba(0,0,0, 0.2)",
                   }}
-                />
+                /> */}
               </Button>
             </Box>
 
             {/* SET RECRUITS STATUS TO REJECTED */}
-            <Box>
-              <Button
-                onClick={() => {
-                  let rejectedUser = {
-                    id: charID,
-                    charRecruitStatus: "rejected",
-                  };
-                  setRecruitStatus("rejected");
-                  rejectUser(rejectedUser);
-                }}
-              >
-                <PersonRemoveIcon
-                  sx={{
-                    fontSize: "3rem",
-                    color: "#141937",
-                    boxShadow: "2px 2px 5px 5px rgba(0,0,0, 0.2)",
-                  }}
-                />
-              </Button>
-            </Box>
           </Box>
         </Box>
       </CardContent>
