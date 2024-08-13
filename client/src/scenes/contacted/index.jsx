@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { TailSpin } from "react-loader-spinner";
+import { ClipLoader } from "react-spinners";
 import {
   Box,
   Card,
@@ -608,7 +610,20 @@ const Products = () => {
           )}
         </Box>
       ) : (
-        <>Loading ...</>
+        <Box
+          display="flex"
+          marginTop="15%"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <ClipLoader
+            color="white"
+            loading={isLoading}
+            size={150}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+        </Box>
       )}
     </Box>
   );

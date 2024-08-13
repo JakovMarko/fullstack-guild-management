@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ClipLoader } from "react-spinners";
 import {
   Box,
   Card,
@@ -469,7 +470,7 @@ const Product = ({
         </Box>
 
         {/* {CONTAINER FOR POSTED TIME AND LIKE DISLIKE} */}
-        <Box display="flex" justifyContent="space-between">
+        <Box display="flex" justifyContent="space-between" alignContent="end">
           {/* {LEFT SIDE} */}
           <Box>
             <Typography variant="body1" color="grey" margin="5px">
@@ -480,8 +481,8 @@ const Product = ({
 
           {/* {RIGHT SIDE} */}
           {/* SET RECRUITS STATUS TO CONTACTED */}
-          <Box display="flex" flexDirection="row">
-            <Box>
+          <Box display="flex" flexDirection="row" alignContent="flex-end">
+            <Box display="flex" alignContent="flex-end">
               <Button
                 onClick={() => {
                   let contactedUser = {
@@ -492,18 +493,29 @@ const Product = ({
                   contactUser(contactedUser);
                 }}
               >
-                <PersonAddIcon
+                <Typography
+                  sx={{
+                    padding: "1px 2px",
+                    fontSize: "1.2rem",
+                    fontWeight: "bold",
+                    color: "#141937",
+                    boxShadow: "2px 2px 5px 5px rgba(0,0,0, 0.2)",
+                  }}
+                >
+                  CONTACT
+                </Typography>
+                {/* <PersonAddIcon
                   sx={{
                     fontSize: "3rem",
                     color: "#141937",
                     boxShadow: "2px 2px 5px 5px rgba(0,0,0, 0.2)",
                   }}
-                />
+                /> */}
               </Button>
             </Box>
 
             {/* SET RECRUITS STATUS TO REJECTED */}
-            <Box>
+            <Box display="flex" alignContent="flex-end">
               <Button
                 onClick={() => {
                   let rejectedUser = {
@@ -514,13 +526,24 @@ const Product = ({
                   rejectUser(rejectedUser);
                 }}
               >
-                <PersonRemoveIcon
+                <Typography
+                  sx={{
+                    padding: "1px 2px",
+                    fontSize: "1.2rem",
+                    fontWeight: "bold",
+                    color: "#141937",
+                    boxShadow: "2px 2px 5px 5px rgba(0,0,0, 0.2)",
+                  }}
+                >
+                  REJECT
+                </Typography>
+                {/* <PersonRemoveIcon
                   sx={{
                     fontSize: "3rem",
                     color: "#141937",
                     boxShadow: "2px 2px 5px 5px rgba(0,0,0, 0.2)",
                   }}
-                />
+                /> */}
               </Button>
             </Box>
           </Box>
@@ -609,7 +632,20 @@ const Products = () => {
           )}
         </Box>
       ) : (
-        <>Loading ...</>
+        <Box
+          display="flex"
+          marginTop="15%"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <ClipLoader
+            color="white"
+            loading={isLoading}
+            size={150}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+        </Box>
       )}
     </Box>
   );
